@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hgupt12/bifrost/internal/lib"
-	"github.com/hgupt12/bifrost/internal/session"
+	session "github.com/hgupt12/bifrost/internal/session/receive"
 	"github.com/spf13/cobra"
 )
 

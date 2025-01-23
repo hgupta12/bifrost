@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hgupt12/bifrost/internal/lib"
-	"github.com/hgupt12/bifrost/internal/session"
+	session "github.com/hgupt12/bifrost/internal/session/send"
 	"github.com/pion/webrtc/v4"
 	"github.com/spf13/cobra"
 )
@@ -14,18 +14,23 @@ func init() {
 }
 
 var sendCmd = &cobra.Command{
-	Use:   "send",
+	Use:   "send [filepath...]",
 	Short: "Send files",
 	Long:  "Send files",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		s := session.NewSession()
-
+		s := session.NewSession(len(args))
+		fmt.Println(args)
 		if err := s.CreateConnection(); err != nil {
 			return err
 		}
-		if err := s.CreateDataChannel(); err != nil {
+		if err := s.CreateControlChannel(); err != nil {
 			return err
 		}
+
+		if err := s.CreateTransferChannels(args); err != nil {
+			return err
+		}		
+
 		encodedOffer, err := s.CreateOffer()
 		if err != nil {
 			return err
